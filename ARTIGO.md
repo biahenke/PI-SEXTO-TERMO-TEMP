@@ -1,4 +1,4 @@
-# Do pacote bruto ao dado útil: leituras de sensores com Meshtastic e MongoDB
+# Da Captura à Persistência: Monitoramento de Sensores Ambientais com LoRa e MongoDB
 
 **Beatriz Nunes Henke**  
 *Aluna na Fatec Pompeia Shunji Nishimura*  
@@ -6,36 +6,35 @@
 
 ---
 
-Atividade 10 de Projeto Integrador de Big Data, trabalhei com a coleta e consulta de leituras de sensores. O projeto acompanha temperatura e umidade do DHT11 e permite observar os dados recebidos e armazenados no MongoDB.
+Na 10ª atividade prática da disciplina de Projeto Integrador de Big Data, desenvolvi a análise e acompanhamento do pipeline de telemetria ambiental. O objetivo foi estruturar a esteira de dados que monitora temperatura e umidade via sensor DHT11, garantindo que cada medição de campo seja transmitida e armazenada com segurança em banco NoSQL.
 
-O caminho dos dados é:  
-**DHT11 → Arduino Mega → rádio Meshtastic → MQTT → MongoDB.**
+A esteira de transmissão foi composta por cinco etapas integradas:
+DHT11 ➔ Arduino Mega ➔ Rádio LoRa (Heltec / Meshtastic) ➔ Broker MQTT ➔ Servidor MongoDB (iot.sensores).
 
-Para facilitar a conferência, organizei as informações dos sensores e preparei uma consulta que mostra as leituras recentes e continua acompanhando as novas.
+Para validar a consistência das leituras antes de automatizar o consumo, organizei uma síntese com o comportamento temporal das variáveis coletadas:
 
-### Resumo dos sensores e das informações coletadas:
+Métricas consolidadas e histórico das medições:
 
-> *[ INSERIR AQUI O PRINT 1: Tabela verde de medições do sensor ]*
+[IMAGEM 1 - TABELA DE MEDIÇÕES DO SENSOR]
 
-No terminal, executo `python consulta_mongo.py 200` para exibir as 200 leituras mais recentes. Depois, o script verifica periodicamente a chegada de novos registros. Assim, é possível acompanhar os dados sem consultar o banco manualmente a cada leitura.
+Para consumir essas informações em tempo real via terminal, implementamos o script em Python consulta_mongo.py 200. Ele realiza a busca dos 200 registros mais recentes na base e entra em modo de escuta ativa a cada 2 segundos, capturando novos pacotes conforme chegam sem sobrecarregar o banco com chamadas manuais:
 
-### Consulta das 200 leituras mais recentes e acompanhamento das novas:
+Extração das 200 leituras mais recentes e escuta em tempo real:
 
-> *[ INSERIR AQUI O PRINT 2: Terminal do VS Code rodando a consulta das 200 leituras ]*
+[IMAGEM 2 - TERMINAL VS CODE EXECUTANDO A CONSULTA]
 
-O MongoDB mantém os documentos recebidos na coleção `iot.sensores`. Conferir os registros no banco ajuda a validar que as mensagens estão chegando e permite consultar os dados posteriormente.
+Os registros consolidados ficam armazenados como documentos flexíveis na coleção iot.sensores. A verificação direta na base permite validar se a carga útil (payload decodificado) e os metadados da rede mesh foram serializados corretamente para futuras agregações analíticas:
 
-### Registros armazenados no MongoDB:
+Inspeção dos documentos persistidos no MongoDB:
 
-> *[ INSERIR AQUI O PRINT 3: Tela do MongoDB Compass com a coleção sensores aberta ]*
+[IMAGEM 3 - DOCUMENTOS NO MONGODB COMPASS]
 
----
+Essa atividade foi fundamental para vivenciar na prática a integração entre dispositivos embarcados de baixo consumo e bancos Não-Relacionais voltados a grandes volumes de dados de IoT.
 
-Este trabalho foi um passo para transformar mensagens de sensores em dados que podem ser acompanhados e consultados. O código e as instruções para executar o projeto estão no repositório:
+O código-fonte com os scripts e o passo a passo de execução estão disponíveis no meu repositório:
+Repositório: https://github.com/biahenke/PI-SEXTO-TERMO-TEMP
 
-**Repositório:** [https://github.com/biahenke/PI-SEXTO-TERMO-TEMP](https://github.com/biahenke/PI-SEXTO-TERMO-TEMP)
+Atividade 10 — IAL220, Projeto Integrador de Big Data
+Fatec Shunji Nishimura Pompeia | Allan Siriani, PhD
 
-Atividade 10 — IAL220, Projeto Integrador de Big Data  
-[Fatec Shunji Nishimura Pompeia](https://www.linkedin.com/company/fatecpompeiaoficial/) | [Allan Siriani, PhD](https://www.linkedin.com/in/siriani)
-
-#BigData #IoT #MongoDB #Meshtastic #EngenhariaDeDados #Fatec
+#BigData #IoT #MongoDB #Meshtastic #EngenhariaDeDados #Fatec #Python #LoRa
